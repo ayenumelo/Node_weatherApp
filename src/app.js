@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const hbs = require('hbs')
 
+const port = process.env.PORT || 3000
 const geocode = require('./utils/geocode')
 const forcast = require('./utils/forcast')
 
@@ -21,7 +22,7 @@ app.use(express.static(publicDir))
 
 app.get('', (req, res) => {
     res.render('index', {
-      title: 'Weather',
+        title: 'Weather',
         name: 'Friday Ayenumelo'
     })
 })
@@ -48,41 +49,41 @@ app.get('/weather', (req, res) => {
             error: 'You must provide an address'
         })
     }
-    geocode(req.query.address, ( error, { latitude, longitude, location } = {}) => {
+    geocode(req.query.address, (error, { latitude, longitude, location } = {}) => {
         if (error) {
-              return res.send({ error })
-         }
-         forcast(latitude, longitude, (error, forecastData) => {
-             if (error) {
-                return  res.send({error})
-             }
-             res.send({
-                 forecast: forecastData,
-                 location,
-                 address: req.query.address
-             })
-         })
+            return res.send({ error })
+        }
+        forcast(latitude, longitude, (error, forecastData) => {
+            if (error) {
+                return res.send({ error })
+            }
+            res.send({
+                forecast: forecastData,
+                location,
+                address: req.query.address
+            })
+        })
     })
 })
 
-app.get('/help/*', (req, res) =>{
-  res.render('404', {
-      title: 404,
-      name: 'Friday Ayenumelo',
-      errorMessage: 'Help article not found.'
-  })
+app.get('/help/*', (req, res) => {
+    res.render('404', {
+        title: 404,
+        name: 'Friday Ayenumelo',
+        errorMessage: 'Help article not found.'
+    })
 })
 
-app.get('*', (req, res) =>{
- res.render('404', {
-    title: 404,
-    name: 'Friday Ayenumelo',
-    errorMessage: 'Page not found.'
- })
+app.get('*', (req, res) => {
+    res.render('404', {
+        title: 404,
+        name: 'Friday Ayenumelo',
+        errorMessage: 'Page not found.'
+    })
 })
 
 
 
-app.listen(3000, () => {
-    console.log('Server is up on port 3000.')
+app.listen(port, () => {
+    console.log('Server is up on port ' + port)
 })
